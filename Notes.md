@@ -1,0 +1,136 @@
+# <center>Pixel - Quick Tutorial</center>
+---
+## 1. What to import?
+* Basic: `github.com/faiface/pixel` and `github.com/faiface/pixel`  
+* Color: `golang.org/image/x/color`  
+* 
+
+## 2. It looks alian.  
+```Go
+package main
+
+import(
+    "github.com/faiface/pixel"
+    "github.com/faiface/pixelgl"
+)
+
+func run() {
+    // The "main thread" here
+}
+
+func main() {
+    pixelgl.Run(run)
+}
+```
+
+## 3. Open the window!  
+First we need a structure to configue the window, like the following:  
+```Go
+cfg := pixelgl.WindowConfig{
+    // The title
+    Title: "Pixel Rocks!",
+    // The size of the window, decided by a rectangle
+    Bounds: pixel.R(0, 0, 1024, 768),
+    // Vertical Sync, would limit the fps
+    VSync: true,
+}
+```  
+Then we are able to initalize a window:  
+```Go
+win, err := pixelgl.NewWindow(cfg)
+if err != nil {
+    // Should be replaced by more appropriate measures
+    panic(err)
+}
+```  
+And finally show the window:  
+```Go
+for !win.Closed() {
+    win.Update()
+}
+```  
+To clear the window with particular color(white for example), we could use this:  
+```Go
+win.Clear(colornames.White)
+```  
+Write it in the loop so that it will br executed every time.
+
+So far we have learnt how to initialize a window and clear it.  
+
+## 4. I want a picture!  
+In Pixel, anyway, what we finally need is an object with type `pixel.Picture`, which can be converted from given type `image.Image`, while the latter are loaded by decoding an image file.  
+So first, we'd open a image and read it. Second, decode it to get an `image.Image` object. Finally, convert it to our expected type, `pixel.Picture`. We integrate all preceedures above into a single function.  
+```Go
+func loadPNG(path string) (pixel.Picture, error) {
+    // Open the file and read it
+    file, err := os.Open(path)      // Package "os" needed
+    if err != nil {
+        return nil, err
+    }
+    defer file.Close()              // Remerber to close the file
+
+    // Decode the image
+    img, _, err := image.Decode(file)  // Package "image" and _"image/png" needed
+    if err != nil {
+        return nil, err
+    }
+
+    // Covert the image and return
+    return pixel.PictureDataFromImage(img), nil
+}
+```  
+Notice, that when decoding the image, we need to import specific packages. One is `"image"`, and there's no wonder. However, as for the second one `_"image/png"`, we didn't actually call any function or use any variable and constant; what we do with it is making use of its initailizer, so we need to add underline before its name, that is called "blank import"  
+
+## 5. Fairy? Sprite!  
+In Pixel, a sprite is created from a `pixel.Picture` object. Assuming we have applied the function `func loadPNG(path string) (pixel.Picture, error)`, let's create our first sprite!  
+```Go
+pic, err := loadPNG(path)       // Assume path is a defined variable
+if err != nil {
+    panic(err)                  // To be replaced
+}
+sprite := pixel.NewSprite(pic, pic.Bounds())
+```  
+The first arguement is obviously a picture. The second one is literally the bounds of the picture. Actually we can interpret the latter argument as a rectangle, only the portion in which will be showed. (Like watch the sky from a window, wide as the sky is, we could only see that in the window)  
+Maybe you have come up with the idea that applying different rectangles on one picture to create different sprites. If so, it's brilliant of you! But we'll discuss it later.  
+
+Then how to draw it to the window? Pixel provides every sprite a function named "Draw" to display it. Here is it:  
+```Go
+sprite.Draw(win, pixel.IM)
+```  
+Also two arguments are expected. The fist is the target, illustrating where the sprite will be drawn on. The second is a matrix, demonstrating a conversion. Here `pixel.IM` is namely the "Identity Matrix", which means no conversion.
+## 6. Inevitable geometry primitives.
+In this secssion, we'll simply talk about the Vector, Rectangle and Matrix.  
+* #### Vector  
+Vectors are usually used to demonstrate positions, movements, velocities, accelerations and so on. Its defination is like this:  
+```Go
+type Vec struct {
+	X, Y float64
+}
+```  
+The "Zero Vector" is pre-defined in Pixel, that is `pixel.ZV`
+Some functions are following:  
+```Go
+// Create the vector (x, y)
+func V(x, y float64) Vec
+
+// Return  u+v
+func (u Vec) Add(v Vec) Vec
+
+// Return u-v
+func (u Vec) Sub(v Vec) Vec
+
+// Return the projection of u on v
+func (u Vec) Project(v Vec) Vec
+
+// Return vector u rotated by the given angle in radians.
+func (u Vec) Rotated(angle float64) Vec
+
+// Return vector u whose X and Y are both multiplied by c
+func (u Vec) Scaled(c float64) Vec
+
+// Return vector u whose X and Y are respectively multiplied by v's X and Y 
+func (u Vec) ScaledXY(v Vec) Vec
+```  
+Notice, that all but the first function never change the value of u and v.  
+
+* #### Rectangle
