@@ -5,6 +5,16 @@
 * Color: `golang.org/image/x/color`  
 * Text : `github.com/faiface/pixel/text`  
 
+**How to download the files?**  
+```PowerShell
+# Initial the module
+go mod init <module name>
+# Get the library
+go get github.com/faiface/pixel
+# Tidy the module
+go mod tidy
+```
+
 ## 2. It looks alian.  
 ```Go
 package main
