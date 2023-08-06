@@ -79,7 +79,7 @@ func loadPNG(path string) (pixel.Picture, error) {
     return pixel.PictureDataFromImage(img), nil
 }
 ```  
-Notice, that when decoding the image, we need to import specific packages. One is `"image"`, and there's no wonder. However, as for the second one `_"image/png"`, we didn't actually call any function or use any variable and constant; what we do with it is making use of its initailizer, so we need to add underline before its name, that is called "blank import"  
+Notice, that when decoding the image, we need to import specific packages. One is `"image"`, and there's no wonder. However, as for the second one `_"image/png"`, we didn't actually call any function or use any variable and constant; what we do with it is making use of its initailizer, so we need to add underline before its name, that is called "blank import". To load images in other types, just change the package blank imported.  
 
 ## 5. Fairy? Sprite!  
 In Pixel, a sprite is created from a `pixel.Picture` object. Assuming we have applied the function `func loadPNG(path string) (pixel.Picture, error)`, let's create our first sprite!  
@@ -128,9 +128,69 @@ func (u Vec) Rotated(angle float64) Vec
 // Return vector u whose X and Y are both multiplied by c
 func (u Vec) Scaled(c float64) Vec
 
-// Return vector u whose X and Y are respectively multiplied by v's X and Y 
+// Return vector u
+// whose X and Y are respectively multiplied by v's X and Y 
 func (u Vec) ScaledXY(v Vec) Vec
 ```  
 Notice, that all but the first function never change the value of u and v.  
 
 * #### Rectangle
+Rectangles are mainly used to illustrate the frame of pictures and the bounds. It was defined like this:  
+```Go
+type Rect struct {
+	Min, Max Vec
+}
+```  
+The two vectors are respectively the lower-left point and the upper-right point.  
+Some functions fo example:  
+```Go
+// Create a rectangle with points (minX, minY) and (maxX, maxY)
+func R(minX, minY, maxX, maxY float64) Rect
+
+// Return the Height of the rectangle
+func (r Rect) H() float64
+
+// Return the Width of the rectangle
+func (r Rect) W() float64
+
+// Return the center of a rectangle
+func (r Rect) Center() Vec
+
+// Check whether a point is within the range of a rectangle
+func (r Rect) Contains(u Vec) bool
+
+// Return whether the two rectangles intersect each other
+func (r Rect) Intersects(s Rect) bool
+
+// Return the rectangle after a given motion
+func (r Rect) Moved(delta Vec) Rect
+```  
+The same as Vector, none of their value was changed inthe functions. And it's worth cautions that the Rectangle can NOT be rotated, which means its direction is fixed.  
+
+* #### Matrix
+Matrices represents all kinds of linear transformations, like movement, scaling and rotation. It was defined as a 2x3 affine matrix:  
+```Go
+type Matrix [6]float64
+```  
+> It looks wierd two have a 2x3 affine matrix. Obviously it can not be directly applied on a 2D vector.  
+> But what if we by default expand the vector to 3D by adding a "1" after x and y? The vector (x, y, 1) would be our friend.  
+
+Usually we don't necessarily need to create a matrix by filling the 6 value. Instead, we start from an identity matrix, that is `pixel.IM` in Pixel.  
+Some functions are as followed. These are important and will frequently occur in the future.  
+```Go
+// Multiplication of matrices. Namely (next * m)
+func (m Matrix) Chained(next Matrix) Matrix
+
+// Similar to the functions mentioned above
+// But the transformation is saved in a matrix
+func (m Matrix) Moved(delta Vec) Matrix
+func (m Matrix) Rotated(around Vec, angle float64) Matrix
+func (m Matrix) Scaled(around Vec, scale float64) Matrix
+func (m Matrix) ScaledXY(around Vec, scale Vec) Matrix
+
+// Apply all the transformations on m to u
+func (m Matrix) Project(u Vec) Vec
+
+// Does the inverse operation to Project
+func (m Matrix) Unproject(u Vec) Vec
+```
