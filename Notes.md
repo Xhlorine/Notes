@@ -1,9 +1,9 @@
 # <center>Pixel - Quick Tutorial</center>
 ---
 ## 1. What to import?
-* Basic: `github.com/faiface/pixel` and `github.com/faiface/pixel`  
+* Basic: `github.com/faiface/pixel` and `github.com/faiface/pixel/pixelgl`  
 * Color: `golang.org/image/x/color`  
-* 
+* Text : `github.com/faiface/pixel/text`  
 
 ## 2. It looks alian.  
 ```Go
@@ -196,3 +196,25 @@ func (m Matrix) Unproject(u Vec) Vec
 ```
 
 ## 7. Where's my mouse and keyboard?
+Pixel provides a series of functions to deal with keyboard and mouse events. Here are some examples!  
+Assuming that we have got a window `win`, if you wonder whether the mouse is clicked down,You can use method `win.JustPressed(key)`, which returns true when the given argument `key` has just been pressed down, or rather, when the motion "press" occurs. Below shows a simple conclusion of its value available.  
+```Go
+pixelgl.KeyA
+// from A to Z
+
+pixelgl.MouseButtonLeft
+// Also Right, Middle and so on
+
+pixelgl.KeyLeftControl
+// Also Alt, Shift, etc.
+
+//namely "pixelgl.Key" + keyname
+```  
+If you want a lasting signal after a key being pressed, you may prefer `win.Pressed(key)`, which checks whether the key's status of being pressed.  
+To get the current position of the mouse, you could simply use `win.MousePosition`, a vector recording that infomation.  
+What about the wheel on my mouse? we can use `win.MouseScroll()`, which returns a vector recording the amount of two directions by the user. Usually we use its field `Y`.  
+## 8. "Hello World!"  
+So far, we haven't mentioned how to write texts on the window. And now here is it!  
+In short, we should read a font into the memory, then use the imported font to make a string a sprite, and finally draw it on the window.  
+
+
