@@ -1,9 +1,11 @@
 # <center>Pixel - Quick Tutorial</center>
----
+
 ## 1. What to import?
 * Basic: `github.com/faiface/pixel` and `github.com/faiface/pixel/pixelgl`  
 * Color: `golang.org/image/x/color`  
-* Text : `github.com/faiface/pixel/text`  
+* Text : `github.com/faiface/pixel/text` 
+* Basicfont: `golang.org/image/x/basicfont`  
+* TrueType Font(TTF): `github.com/golang/freetype/truetype`   
 
 **How to download the files?**  
 ```PowerShell
@@ -225,6 +227,89 @@ To get the current position of the mouse, you could simply use `win.MousePositio
 What about the wheel on my mouse? we can use `win.MouseScroll()`, which returns a vector recording the amount of two directions by the user. Usually we use its field `Y`.  
 ## 8. "Hello World!"  
 So far, we haven't mentioned how to write texts on the window. And now here is it!  
-In short, we should read a font into the memory, then use the imported font to make a string a sprite, and finally draw it on the window.  
+In short, we should load a font with the type `font.Face`, then use it to create an `Atlas`, and finally create a special kind of sprite - `text.Text`.  
 
+First, let's deal with the `Atlas`.  
+```Go
+atlas := text.NewAtlas(
+    basicfont.Face7x13,
+    []rune{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'},
+)
+```  
+The method takes two or more arguments. One is the font face. The others are slices recording the characters to import into `atlas`. `rune` is namely a different name of type `int32`. There is a pre-defined slice to use, `text.ASCII`, which collected all the ASCII characters. We 'll talk about other fonts later.  
 
+Then it comes to the text.  
+```Go
+txt := text.New(pixel.V(100, 500), atlas)
+```  
+We have two ways to add strings.  
+```Go
+// Use package fmt
+fmt.Fprint(txt, "A String! ")
+// fmt.Fprintln(), fmt.Fprintf() are also allowed
+
+// Use methods of text.Text
+txt.WriteString("A String! ")
+// See more methods in the doc
+```  
+
+Finally we can simply draw it on the window.  
+```Go
+txt.Draw(win, pixel.IM)
+```  
+Or clear it to be empty.  
+```Go
+txt.Clear()
+```
+Many properties are changeable of the text. Here is a simple list.  
+```Go
+// Orig is usually the top-left dot position. 
+Orig pixel.Vec
+
+// Dot is the position where the next character will be written
+// It can be moved both automatically and manualy
+Dot pixel.Vec
+
+// Color is the color of the text TO BE written. Defaults to white.
+Color color.Color
+
+// LineHeight is the vertical distance between two lines of text.
+// Usually made to be times of txt.Atlas().LineHeight()
+LineHeight float64
+```  
+To interact with the input of keyboard, we can use `text.Typed()`, which returns a string containing what the user have typed on the keyboard since the last call to `win.Update`.  
+
+In the end, let's have a look at how to use other fonts(TTF for example).  
+```Go
+// Need the path and font size, returns a font.Face
+func loadTTF(path string, size float64) (font.Face, error) {
+    // Open the file
+    file, err := os.Open(path)
+    if err != nil {
+        return nil, err
+    }
+    defer file.Close()
+
+    // Read the file
+    bytes, err := ioutil.ReadAll(file)
+    if err != nil {
+        return nil, err
+    }
+
+    // Parse its content
+    font, err := truetype.Parse(bytes)
+    if err != nil {
+        return nil, err
+    }
+
+    // Create a face and return it
+    return truetype.NewFace(font, &truetype.Options{
+        Size:              size,
+        GlyphCacheEntries: 1,
+    }), nil
+}
+```  
+As for the properties of `Truetype.Options`, we recommend to set them like above. Low `GlyphCacheEntries` can reduce the consumption of memory.  
+
+---
+### See more tutorial at Advance.md! (Coming soon...)
