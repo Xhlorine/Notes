@@ -82,3 +82,26 @@ batch.Draw(win)
 Another method frequently used is `batch.Clear()`, which clean up it to make an empty but initialized batch.  
 
 ## 4. Align the Text!
+By default, the text are aligned to the left. But how could we change that? We can have it done by changing `Dot` and `Orig`.  
+First, since we have to deal with the content line by line, The content should be devided apart, like this:  
+```Go
+lines := []string{
+    "This is a very long line",
+    "Short line",
+    "!@#$^&*()_+",
+}
+```  
+Then move every line's `Dot` the length of itself to the left, and write it into `txt`.  
+```Go
+for _, line := range lines {
+    txt.Dot.X -= txt.BoundsOf(line).W()
+    fmt.Fprintln(txt, line)
+}
+```
+If we print the text, we'll find it at the left of `Orig` and aligning to it. So remember not to make `Orig` at left.  
+Aligning to the middle is similar to what we have down just now. Merely by change this line couuld do that.  
+```Go
+txt.Dot.X -= txt.BoundsOf(line).W()/2
+```
+
+## 5. IMDraw 

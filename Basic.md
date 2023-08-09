@@ -5,7 +5,8 @@
 * Color: `golang.org/image/x/color`  
 * Text : `github.com/faiface/pixel/text` 
 * Basicfont: `golang.org/image/x/basicfont`  
-* TrueType Font(TTF): `github.com/golang/freetype/truetype`   
+* TrueType Font(TTF): `github.com/golang/freetype/truetype` 
+* IMDraw: `github.com/faiface/pixel/imdraw`  
 
 **How to download the files?**  
 ```PowerShell
@@ -277,7 +278,7 @@ Color color.Color
 // Usually made to be times of txt.Atlas().LineHeight()
 LineHeight float64
 ```  
-To interact with the input of keyboard, we can use `text.Typed()`, which returns a string containing what the user have typed on the keyboard since the last call to `win.Update`.  
+To interact with the input of keyboard, we can use `text.Typed()`, which returns a string containing what the user have typed on the keyboard since the last call to `win.Update`. Notice, that <kbh>Newline</kbh> <kbh>Tab</kbh> and so on will not be listed in the string.  
 
 In the end, let's have a look at how to use other fonts(TTF for example).  
 ```Go
