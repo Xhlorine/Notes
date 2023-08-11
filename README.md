@@ -12,9 +12,9 @@ By the way, I failed to found neither authoritized nor self-made translation in 
 
 ## Links
 
-**Pixel**: <https://github.com/faiface/pixel>
-**Pixel Package**: <https://pkg.go.dev/github.com/faiface/pixel>
-**Pixel Wiki**: <https://github.com/faiface/pixel/wiki>
+**Pixel**: <https://github.com/faiface/pixel>  
+**Pixel Package**: <https://pkg.go.dev/github.com/faiface/pixel>  
+**Pixel Wiki**: <https://github.com/faiface/pixel/wiki>  
 
 ## Contents  
 
