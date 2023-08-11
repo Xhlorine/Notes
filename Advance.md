@@ -110,7 +110,7 @@ See more at [Authoritized Tutorial](https://github.com/faiface/pixel/wiki/Drawin
 
 ---
 
-####For more information, please check the following websites:  
+#### For more information, please check the following websites:  
 
 **Pixel**: <https://github.com/faiface/pixel>  
 **Pixel Package**: <https://pkg.go.dev/github.com/faiface/pixel>  
