@@ -24,7 +24,7 @@ sprite := pixel.NewSprite(spritesheet, treeFrames[rand.Intn(len(treeFrames))])
 ```
 And other funny ways you can think.  
 
-## 2. Camera's looking the Game  
+## 2. Camera's looking at the Game  
 Imagine some 2D games, like *Don't Starve*. the background is moving when we move the character. If we assume all the scenery is collected by a camera in the air, then it is moving when the character moves.  
 Not difficult to think of that, in the game, the locations of the trees are constants, but they are actually moving on the screen. To illustrate such difference, we use the terms "Game Space" and "Screen Space".  
 Let's have an example! When we press "Down", the location of camera(or rather, Wilson) on Y-axis reduced in game space, while that of the trees increased in the screen space. If we use a matrix to implement the movement of camera, then its inverse matrix is expected for the trees. That is, when apply `pixel.IM.Moved(camPos)` to the screen space, we will get the game space. So far, the hardship has been overcome. Please check the following code rapidly.
@@ -105,3 +105,13 @@ txt.Dot.X -= txt.BoundsOf(line).W()/2
 ```
 
 ## 5. IMDraw 
+~~More knowledges needed, I haven't figured it out.~~  
+See more at [Authoritized Tutorial](https://github.com/faiface/pixel/wiki/Drawing-shapes-with-IMDraw)
+
+---
+
+####For more information, please check the following websites:  
+
+**Pixel**: <https://github.com/faiface/pixel>
+**Pixel Package**: <https://pkg.go.dev/github.com/faiface/pixel>
+**Pixel Wiki**: <https://github.com/faiface/pixel/wiki>

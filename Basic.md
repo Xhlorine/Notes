@@ -313,4 +313,4 @@ func loadTTF(path string, size float64) (font.Face, error) {
 As for the properties of `Truetype.Options`, we recommend to set them like above. Low `GlyphCacheEntries` can reduce the consumption of memory.  
 
 ---
-### See more tutorial at Advance.md! (Coming soon...)
+#### See more tutorial at [Advance.md](Advance.md)! (Now coming!)
